@@ -26,8 +26,19 @@ class Background extends React.Component{
 }
 
 class Input extends React.Component {
+  getNewClass(){
+    let input = document.getElementById('input').value;
+    input = input.toLowerCase().trim()
+    let acceptedColours = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'black', 'grey', 'gray', 'white']
+    if (acceptedColours.includes(input)){
+      return input
+    } else {
+      return 'ERROR'
+    }
+  }
+
   render(){
-    return <div><input id="input"></input><button onClick={() => this.props.onClick('red')}>submit</button></div>
+    return <div><input id="input"></input><button onClick={() => this.props.onClick(this.getNewClass())}>submit</button></div>
   }
 }
 
