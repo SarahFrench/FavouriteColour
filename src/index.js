@@ -33,12 +33,40 @@ class Input extends React.Component {
     if (acceptedColours.includes(input)){
       return input
     } else {
-      return 'ERROR'
+      this.getGiphy()
+      return ""
     }
   }
 
+  fetchAndDecode(url, type) {
+    return fetch(url).then(response => {
+      if (type === 'blob') {
+        return response.blob();
+      } else if (type === 'text') {
+        return response.text();
+      }
+    })
+    .catch(e => {
+      console.log('There has been a problem with your fetch operation: ' + e.message);
+    });
+  }
+
+  getGiphy(){
+
+    var GIPHY_API_KEY ='lDP1N91b3crbFDWjwtQqOHmUCN30SAnq';
+    let url = `//api.giphy.com/v1/gifs/search?q=weird&api_key=${GIPHY_API_KEY}`
+    let response = this.fetchAndDecode(url, 'text')
+    response.then( x => {
+      let json = JSON.parse(x);
+      let element = document.createElement('img')
+      element.src= `${json.data[0].bitly_gif_url}`
+      console.log(element);
+      document.getElementById('container').appendChild(element);
+    })
+  }
+
   render(){
-    return <div><input id="input"></input><button onClick={() => this.props.onClick(this.getNewClass())}>submit</button></div>
+    return <div id="container"><input id="input"></input><button onClick={() => this.props.onClick(this.getNewClass())}>submit</button></div>
   }
 }
 
