@@ -10,10 +10,16 @@ class Background extends React.Component{
     }
   }
 
+  changeBackground(){
+    this.setState({
+      class: 'background white',
+    })
+  }
+
   render() {
     return <div className={this.state.class}>
               <h1>
-                Hello Sarah!
+                < Input onClick={() => this.changeBackground()} />
               </h1>
            </div>
   }
@@ -21,7 +27,7 @@ class Background extends React.Component{
 
 class Input extends React.Component {
   render(){
-    return <button>Click me</button>
+    return <button onClick={this.props.onClick}>Click me</button>
   }
 }
 
