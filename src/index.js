@@ -7,7 +7,6 @@ class Background extends React.Component{
     super(props);
     this.state = {
       class: 'background white',
-      gifPresent: false,
     }
   }
 
@@ -19,7 +18,7 @@ class Background extends React.Component{
 
   render() {
     return <div className={this.state.class}>
-                < Input gifPresent={this.state.gifPresent} onClick={(colour) => this.changeBackground(colour)} />
+                < Input onClick={(colour) => this.changeBackground(colour)} />
            </div>
   }
 }
@@ -49,11 +48,16 @@ class Input extends React.Component {
           colour: true,
           gif: false,
         });
+      default:
+        this.setState({
+          colour: true,
+          gif: false,
+        })
     }
   }
 
   updateMessage(input){
-    if (this.state.colour){
+    if (this.inputIsColour(input)){
       let messageIndex = Math.floor(Math.random() * this.state.messageChoices.length)
       let message = this.state.messageChoices[messageIndex]
       let colourRegex = RegExp('<colour>', 'g')
@@ -61,29 +65,41 @@ class Input extends React.Component {
         message = message.replace(colourRegex, input)
       }
       this.state.message = message;
-    } else if (this.state.gif) {
+    } else {
       this.state.message = `Yeah. That isn't a colour. Here's a GIF for your trouble though.`
     }
   }
 
-  useInput(){
-    let input = document.getElementById('input').value;
-    input = input.toLowerCase().trim()
+  inputIsColour(input){
     let acceptedColours = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'black', 'grey', 'gray', 'white']
-    if (acceptedColours.includes(input)){
+    return acceptedColours.includes(input);
+  }
+
+  processInput(){
+    let input = document.getElementById('input').value;
+    input = input.toLowerCase().trim();
+    return input;
+  }
+
+  useInput(){
+    let input = this.processInput()
+    let newClass = ''
+    if (this.inputIsColour(input)){
       this.swapStateColourAndGif('colour');
       this.removeGif();
-      this.updateMessage(input)
-      return input
+      newClass = input;
     } else if (input === '' ) {
       this.swapStateColourAndGif('gif');
-      this.noInput()
-      return "white"
+      this.noInput();
+      this.getSpecificGiphy();
+      newClass = "white";
     } else {
       this.swapStateColourAndGif('gif');
-      this.getGiphy(input)
-      return "white"
+      this.getGiphy(input);
+      newClass = "white";
     }
+    this.updateMessage(input);
+    return newClass;
   }
 
   fetchAndDecode(url, type) {
@@ -100,14 +116,13 @@ class Input extends React.Component {
   }
 
   removeGif(){
-    if (this.props.gifPresent && !!document.getElementById('gif')){
+    if (!!document.getElementById('gif')){
       document.getElementById('gif').remove();
     }
   }
 
-  noInput(){
+  noInputAlert(){
     window.alert("You didn't type anything in the text box!");
-    this.getSpecificGiphy()
   }
 
   getGiphy(input){
@@ -123,7 +138,7 @@ class Input extends React.Component {
         let element = document.createElement('img');
         element.src= url;
         element.id = 'gif'
-        element.className = 'gif mt-4'
+        element.className = 'gif mt-2'
 
         // remove pre-existing gif if any. Code here so transition fast
         this.removeGif();
@@ -145,7 +160,7 @@ class Input extends React.Component {
         let element = document.createElement('img');
         element.src= url;
         element.id = 'gif'
-        element.className = 'gif mt-4'
+        element.className = 'gif mt-2'
 
         // remove pre-existing gif if any. Code here so transition fast
         this.removeGif();
@@ -155,18 +170,18 @@ class Input extends React.Component {
   }
 
   render(){
-    return <div id="container" className="pt-5">
+    return <div id="container" className="pt-3">
       <div id="input-box" className="box w-50">
-        <h1 className="mb-4">
+        <h5 className="mb-4">
           Tell me your favourite colour:
-        </h1>
+        </h5>
         <div>
           <input id="input"></input>
           <button className="button" onClick={() => this.props.onClick(this.useInput())}>Tell me!</button>
         </div>
-        <p className="mt-2">
+        <div className="mt-2">
           {this.state.message}
-        </p>
+        </div>
       </div>
     </div>
   }

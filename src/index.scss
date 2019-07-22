@@ -14,8 +14,8 @@
 }
 
 .gif {
-  max-height: 300px;
-  max-width: 500px;
+  max-height: 250px;
+  max-width: 150px;
   border-radius: 20px;
 }
 
@@ -26,10 +26,6 @@
 
 .box {
   border: #FFFFFF80 solid 2px;
-}
-
-.h1, body {
-  margin: 0;
 }
 
 .background{
@@ -77,23 +73,23 @@
 }
 
 .black {
-  background-color: black;
+  background-color: #000000;
   color: #FFFFFF80;
 }
 
 .grey, .gray {
-  background-color: gray;
+  background-color: #808080;
   color: #FFFFFF80;
 }
 
 .white {
-  background-color: white;
+  background-color: #FFFFFF;
   color: #00000080;
 
   .box {
     border: #00000080 solid 2px;
   }
-  
+
   .button {
     border: #00000020 solid 1px;
     background-color: #00000008;
