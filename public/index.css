@@ -3,7 +3,6 @@
   width: 100vw; }
 
 .box {
-  margin: 0 auto 0 auto;
   padding: 2em;
   max-height: 500px;
   display: flex;
@@ -21,7 +20,7 @@
   background-color: rgba(255, 255, 255, 0.5); }
 
 .box {
-  border: #FFFFFF80 solid 2px; }
+  border: #FFFFFFC0 solid 2px; }
 
 .background {
   height: 100%;
@@ -29,14 +28,14 @@
 
 .red {
   background-color: #ff4343;
-  color: #FFFFFF80; }
+  color: #FFFFFFC0; }
 
 .orange {
   background-color: #ffa143;
-  color: #FFFFFF80; }
+  color: #FFFFFFC0; }
 
 .yellow {
-  background-color: #ffff43;
+  background-color: #FFCA4B;
   color: #00000080; }
   .yellow .box {
     border: #00000080 solid 2px; }
@@ -54,6 +53,10 @@
 
 .purple {
   background-color: #c06afd;
+  color: #FFFFFF80; }
+
+.pink {
+  background-color: #E983D8;
   color: #FFFFFF80; }
 
 .black {

@@ -6,13 +6,13 @@ class Background extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      class: 'background white',
+      class: 'd-flex flex-row align-items-center justify-content-center background white',
     }
   }
 
   changeBackground(colour){
     this.setState({
-      class: 'background ' + colour,
+      class: 'd-flex flex-row align-items-center justify-content-center background ' + colour,
     })
   }
 
@@ -71,7 +71,7 @@ class Input extends React.Component {
   }
 
   inputIsColour(input){
-    let acceptedColours = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'black', 'grey', 'gray', 'white']
+    let acceptedColours = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'black', 'grey', 'gray', 'white']
     return acceptedColours.includes(input);
   }
 
@@ -170,8 +170,7 @@ class Input extends React.Component {
   }
 
   render(){
-    return <div id="container" className="pt-3">
-      <div id="input-box" className="box w-50">
+    return <div id="input-box" className="box w-50">
         <h5 className="mb-4">
           Tell me your favourite colour:
         </h5>
@@ -183,7 +182,6 @@ class Input extends React.Component {
           {this.state.message}
         </div>
       </div>
-    </div>
   }
 }
 
