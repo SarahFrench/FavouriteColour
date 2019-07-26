@@ -15,8 +15,6 @@ class Background extends React.Component{
   }
 
   changeColourScheme(object){
-    console.log("Changing state in Background component with new background, border, text colours");
-    console.log('before text: ' + this.state.textColour);
     this.setState({
       backgroundColour: object.background,
       textColour: object.text,
@@ -25,7 +23,6 @@ class Background extends React.Component{
   }
 
   render() {
-    console.log('Rendering Background');
     return <div className={this.state.class} style={{backgroundColor:this.state.backgroundColour,colour:this.state.textColour}}>
                 < Input onClick={(object) => this.changeColourScheme(object)} colours={this.state.colours} text={this.state.textColour} border={this.state.borderColour} />
            </div>
@@ -185,7 +182,6 @@ class Input extends React.Component {
     let response = this.fetchAndDecode(url, 'text')
     response
       .then( response => {
-        console.log(JSON.parse(response).data.length > 0);
         if(JSON.parse(response).data.length > 0){
           let json = JSON.parse(response);
           let imageSelection = Math.floor(Math.random() * json.data.length)
@@ -232,7 +228,6 @@ class Input extends React.Component {
   }
 
   render(){
-    console.log("rendering Input component");
     return <div id="input-box" className="box w-50" style={{color:this.props.text,borderColor:this.props.border,borderStyle:'solid',borderWidth:'2px' }}>
         <h5 className="mb-4">
           Tell me your favourite colour:
