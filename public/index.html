@@ -35,5 +35,27 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      function pressedEnter(e){
+        if(e.key === "Enter"){
+          let button = document.getElementsByClassName('button')[0]
+          simulateClick(button)
+        }
+      }
+
+      // From https://gomakethings.com/how-to-simulate-a-click-event-with-javascript/
+      var simulateClick = function (elem) {
+    	// Create our event (with options)
+    	var evt = new MouseEvent('click', {
+    		bubbles: true,
+    		cancelable: true,
+    		view: window
+    	});
+    	// If cancelled, don't dispatch our event
+    	var canceled = !elem.dispatchEvent(evt);
+    };
+
+      document.addEventListener('keypress', pressedEnter)
+    </script>
   </body>
 </html>
