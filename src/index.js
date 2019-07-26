@@ -97,7 +97,7 @@ class Input extends React.Component {
       this.swapStateColourAndGif('colour');
       this.removeGif();
       this.updateMessage(input, colour);
-      colours = {background: colour.hex, text:this.textAndBorderColour(colour.hex), border:this.textAndBorderColour(colour.hex)};
+      colours = {background: colour.hex, text:this.invertHex(colour.hex), border:this.invertHex(colour.hex)};
     } else if (input === '' ) {
       this.swapStateColourAndGif('gif');
       this.noInputAlert();
@@ -112,22 +112,43 @@ class Input extends React.Component {
     return colours;
   }
 
-  textAndBorderColour(hexcode){
-    if(RegExp('#([A-Fa-f0-9]{3,})','i').test(hexcode)){
-      hexcode = hexcode.toLowerCase().slice(1,hexcode.length)
-      console.log("New colour from input: " + hexcode);
-      console.log("Is the number very dark? : " + (parseInt(hexcode, 16) < parseInt('800000', 16)));
-      if (parseInt(hexcode, 16) < parseInt('800000', 16) ){
-        console.log("Dark colour; use light colour for text: #FFFFFF");
-        return '#FFFFFFC0';
-      } else {
-        console.log("Light colour; use dark colour for text: #000000");
-        return '#000000C0';
-      }
-    } else {
-      return '#000000C0'
+  // From this legend http://www.mattlag.com/scripting/hexcolorinverter.php
+  invertHex(hexnum){
+    hexnum = hexnum.slice(1,hexnum.length)
+    console.log("HERE");
+    console.log(hexnum);
+    if(hexnum.length !== 6) {
+      alert("Hex color must be six hex numbers in length.");
+      return false;
     }
+
+    hexnum = hexnum.toUpperCase();
+    var splitnum = hexnum.split("");
+    var resultnum = "";
+    var simplenum = "FEDCBA9876".split("");
+    var complexnum = [];
+    complexnum.A = "5";
+    complexnum.B = "4";
+    complexnum.C = "3";
+    complexnum.D = "2";
+    complexnum.E = "1";
+    complexnum.F = "0";
+
+    for(let i=0; i<6; i++){
+      if(!isNaN(splitnum[i])) {
+        resultnum += simplenum[splitnum[i]];
+      } else if(complexnum[splitnum[i]]){
+        resultnum += complexnum[splitnum[i]];
+      } else {
+        alert("Hex colors must only include hex numbers 0-9, and A-F");
+        return false;
+      }
+    }
+
+    return resultnum;
   }
+
+
 
   fetchAndDecode(url, type) {
     return fetch(url).then(response => {
