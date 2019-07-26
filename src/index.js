@@ -14,20 +14,19 @@ class Background extends React.Component{
     }
   }
 
-  changeColourScheme(colour, textBorderColour){
+  changeColourScheme(object){
     console.log("Changing state in Background component with new background, border, text colours");
-    console.log('colour ' + colour);
-    console.log('textBorderColour ' + textBorderColour);
+    console.log(object);
     this.setState({
-      backgroundColour: colour,
-      textColour: textBorderColour,
-      borderColour: textBorderColour
+      backgroundColour: object.background,
+      textColour: object.text,
+      borderColour: object.border,
     })
   }
 
   render() {
-    return <div className={this.state.class} style={{backgroundColor:this.state.backgroundColour,colour:this.state.textBorderColour}}>
-                < Input onClick={(colour, textBorderColour) => this.changeColourScheme(colour, textBorderColour)} colours={this.state.colours} borderColor={this.state.borderColour} />
+    return <div className={this.state.class} style={{backgroundColor:this.state.backgroundColour,colour:this.state.textColour}}>
+                < Input onClick={(object) => this.changeColourScheme(object)} colours={this.state.colours} text={this.state.borderColour} border={this.state.borderColour} />
            </div>
   }
 }
@@ -92,25 +91,25 @@ class Input extends React.Component {
 
   useInput(){
     let input = this.processInput()
-    let newClass = ''
+    let colours = {background: '', text:'', border:''}
     let colour = this.getColour(input);
     if (colour && input.length > 0){
       this.swapStateColourAndGif('colour');
       this.removeGif();
       this.updateMessage(input, colour);
-      newClass = colour.hex;
+      colours = {background: colour.hex, text:this.textAndBorderColour(colour.hex), border:this.textAndBorderColour(colour.hex)};
     } else if (input === '' ) {
       this.swapStateColourAndGif('gif');
       this.noInputAlert();
       this.getSpecificGiphy();
       this.updateMessage(input, colour);
-      newClass = "white";
+      colours = {background: '#FFFFFF', text:'#000000', border:'#000000'};
     } else {
       this.swapStateColourAndGif('gif');
       this.getGiphy(input);
-      newClass = "white";
+      colours = {background: '#FFFFFF', text:'#000000', border:'#000000'};
     }
-    return newClass;
+    return colours;
   }
 
   textAndBorderColour(hexcode){
@@ -199,14 +198,14 @@ class Input extends React.Component {
 
   render(){
     console.log("rendering Input component");
-    console.log("this.props.borderColor = " + this.props.borderColor);
-    return <div id="input-box" className="box w-50" style={{borderColor:this.props.borderColor,borderStyle:'solid',borderWidth:'2px' }}>
+    console.log("this.props.borderColor = " + this.props.border);
+    return <div id="input-box" className="box w-50" style={{color:this.props.text,borderColor:this.props.border,borderStyle:'solid',borderWidth:'2px' }}>
         <h5 className="mb-4">
           Tell me your favourite colour:
         </h5>
         <div>
           <input id="input"></input>
-          <button className="button" onClick={() => this.props.onClick(this.useInput(), this.textAndBorderColour(this.state.colourValue))}>Tell me!</button>
+          <button className="button" onClick={() => this.props.onClick(this.useInput())}>Tell me!</button>
         </div>
         <div className="mt-2">
           {this.state.message}
