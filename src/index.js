@@ -16,17 +16,18 @@ class Background extends React.Component{
 
   changeColourScheme(object){
     console.log("Changing state in Background component with new background, border, text colours");
-    console.log(object);
+    console.log('before text: ' + this.state.textColour);
     this.setState({
       backgroundColour: object.background,
       textColour: object.text,
       borderColour: object.border,
-    })
+    });
   }
 
   render() {
+    console.log('Rendering Background');
     return <div className={this.state.class} style={{backgroundColor:this.state.backgroundColour,colour:this.state.textColour}}>
-                < Input onClick={(object) => this.changeColourScheme(object)} colours={this.state.colours} text={this.state.borderColour} border={this.state.borderColour} />
+                < Input onClick={(object) => this.changeColourScheme(object)} colours={this.state.colours} text={this.state.textColour} border={this.state.borderColour} />
            </div>
   }
 }
@@ -38,17 +39,23 @@ class Input extends React.Component {
     this.state = {
       colour: true,
       colourValue: '#FF0000',
+      text: this.props.text,
+      border: this.props.border,
       gif: false,
       message: "C'mon, don't be shy",
     }
   }
 
   getColour(input){
-    let colours = this.props.colours.colours;
-    let options = colours.filter(object => RegExp('\\b' + input + '\\b', 'i').test(object.name))
-    let choice = Math.floor(Math.random()* options.length);
-    this.setState({colourValue: options[choice].hex})
-    return options[choice];
+    if (input){
+      let colours = this.props.colours.colours;
+      let options = colours.filter(object => RegExp('\\b' + input + '\\b', 'i').test(object.name))
+      if (options.length > 0){
+        let choice = Math.floor(Math.random()* options.length);
+        this.setState({colourValue: options[choice].hex})
+        return options[choice];
+      }
+    }
   }
 
   swapStateColourAndGif(mode){
@@ -107,6 +114,7 @@ class Input extends React.Component {
     } else {
       this.swapStateColourAndGif('gif');
       this.getGiphy(input);
+      this.updateMessage(input, colour);
       colours = {background: '#FFFFFF', text:'#000000', border:'#000000'};
     }
     return colours;
@@ -115,8 +123,6 @@ class Input extends React.Component {
   // From this legend http://www.mattlag.com/scripting/hexcolorinverter.php
   invertHex(hexnum){
     hexnum = hexnum.slice(1,hexnum.length)
-    console.log("HERE");
-    console.log(hexnum);
     if(hexnum.length !== 6) {
       alert("Hex color must be six hex numbers in length.");
       return false;
@@ -145,7 +151,7 @@ class Input extends React.Component {
       }
     }
 
-    return resultnum;
+    return '#' + resultnum;
   }
 
 
@@ -177,21 +183,29 @@ class Input extends React.Component {
     var GIPHY_API_KEY ='lDP1N91b3crbFDWjwtQqOHmUCN30SAnq';
     let url = `https://api.giphy.com/v1/gifs/search?q=${input}&api_key=${GIPHY_API_KEY}`
     let response = this.fetchAndDecode(url, 'text')
-
     response
       .then( response => {
-        let json = JSON.parse(response);
-        let imageSelection = Math.floor(Math.random() * json.data.length)
-        let url = json.data[imageSelection].images.downsized.url
-        let element = document.createElement('img');
-        element.src= url;
-        element.id = 'gif'
-        element.className = 'gif mt-2'
+        console.log(JSON.parse(response).data.length > 0);
+        if(JSON.parse(response).data.length > 0){
+          let json = JSON.parse(response);
+          let imageSelection = Math.floor(Math.random() * json.data.length)
+          let url = json.data[imageSelection].images.downsized.url
+          let element = document.createElement('img');
+          element.src= url;
+          element.id = 'gif'
+          element.className = 'gif mt-2'
 
-        // remove pre-existing gif if any. Code here so transition fast
-        this.removeGif();
-        document.getElementById('input-box').appendChild(element);
-
+          // remove pre-existing gif if any. Code here so transition fast
+          this.removeGif();
+          document.getElementById('input-box').appendChild(element);
+        } else {
+          let element = document.createElement('p');
+          element.innerText = 'Wait, no there isn\'t because you entered something too weird for Giphy. Well done.'
+          element.className = 'gif mt-2'
+          element.id = 'gif'
+          this.removeGif();
+          document.getElementById('input-box').appendChild(element);
+        }
       })
   }
 
@@ -219,14 +233,13 @@ class Input extends React.Component {
 
   render(){
     console.log("rendering Input component");
-    console.log("this.props.borderColor = " + this.props.border);
     return <div id="input-box" className="box w-50" style={{color:this.props.text,borderColor:this.props.border,borderStyle:'solid',borderWidth:'2px' }}>
         <h5 className="mb-4">
           Tell me your favourite colour:
         </h5>
         <div>
           <input id="input"></input>
-          <button className="button" onClick={() => this.props.onClick(this.useInput())}>Tell me!</button>
+          <button style={{color:this.props.text}} className="button" onClick={() => this.props.onClick(this.useInput())}>Tell me!</button>
         </div>
         <div className="mt-2">
           {this.state.message}
