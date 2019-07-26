@@ -9,8 +9,8 @@ class Background extends React.Component{
       class: 'd-flex flex-row align-items-center justify-content-center background',
       colours: require('./colours.js'),
       backgroundColour: '#FFFFFF',
-      textColour: '#D3D3D3',
-      borderColour: '#D3D3D3',
+      textColour: '#555555',
+      borderColour: '#555555',
     }
   }
 
