@@ -7,18 +7,23 @@ class Background extends React.Component{
     super(props);
     this.state = {
       class: 'd-flex flex-row align-items-center justify-content-center background white',
+      colours: require('./colours.js'),
+      backgroundColour: '#FFFFFF',
+      textBorderColour: '#000000'
     }
   }
 
-  changeBackground(colour){
+  changeBackground(colour, textBorderColour){
     this.setState({
-      class: 'd-flex flex-row align-items-center justify-content-center background ' + colour,
+      class: 'd-flex flex-row align-items-center justify-content-center background',
+      backgroundColour: colour,
+      textBorderColour: textBorderColour
     })
   }
 
   render() {
-    return <div className={this.state.class}>
-                < Input onClick={(colour) => this.changeBackground(colour)} />
+    return <div className={this.state.class} style={{backgroundColor:this.state.backgroundColour,colour:this.state.textBorderColour}}>
+                < Input onClick={(colour) => this.changeBackground(colour)} colours={this.state.colours} />
            </div>
   }
 }
@@ -29,10 +34,18 @@ class Input extends React.Component {
     super(props);
     this.state = {
       colour: true,
+      colourValue: '',
       gif: false,
       message: "C'mon, don't be shy",
-      messageChoices: ["That's a great choice!", "Really, <colour>? I expected better from you", "Yeah, <colour> is ok I guess", "That's my favourite too!", "Well, I liked <colour> before it was cool."]
     }
+  }
+
+  getColour(input){
+    let colours = this.props.colours.colours;
+    let options = colours.filter(object => RegExp('\\b' + input + '\\b', 'i').test(object.name))
+    let choice = Math.floor(Math.random()* options.length);
+    this.setState({colourValue: options[choice].hex})
+    return options[choice];
   }
 
   swapStateColourAndGif(mode){
@@ -48,6 +61,7 @@ class Input extends React.Component {
           colour: true,
           gif: false,
         });
+        break;
       default:
         this.setState({
           colour: true,
@@ -56,23 +70,15 @@ class Input extends React.Component {
     }
   }
 
-  updateMessage(input){
-    if (this.inputIsColour(input)){
-      let messageIndex = Math.floor(Math.random() * this.state.messageChoices.length)
-      let message = this.state.messageChoices[messageIndex]
-      let colourRegex = RegExp('<colour>', 'g')
-      if (colourRegex.test(message)){
-        message = message.replace(colourRegex, input)
-      }
-      this.state.message = message;
+  updateMessage(input, colour){
+    if (input.length > 0 && colour){
+      console.log(colour);
+      this.state.message = `This colour is called ${colour.name}`;
+    } else if (input.length > 0) {
+      this.state.message = `Yeah. I couldn't find a colour for that input. Here's a GIF for your trouble though.`
     } else {
-      this.state.message = `Yeah. That isn't a colour. Here's a GIF for your trouble though.`
+      this.state.message = 'Watch the gif'
     }
-  }
-
-  inputIsColour(input){
-    let acceptedColours = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'black', 'grey', 'gray', 'white']
-    return acceptedColours.includes(input);
   }
 
   processInput(){
@@ -84,22 +90,37 @@ class Input extends React.Component {
   useInput(){
     let input = this.processInput()
     let newClass = ''
-    if (this.inputIsColour(input)){
+    let colour = this.getColour(input);
+    if (colour && input.length > 0){
       this.swapStateColourAndGif('colour');
       this.removeGif();
-      newClass = input;
+      this.updateMessage(input, colour);
+      newClass = colour.hex;
     } else if (input === '' ) {
       this.swapStateColourAndGif('gif');
-      this.noInput();
+      this.noInputAlert();
       this.getSpecificGiphy();
+      this.updateMessage(input, colour);
       newClass = "white";
     } else {
       this.swapStateColourAndGif('gif');
       this.getGiphy(input);
       newClass = "white";
     }
-    this.updateMessage(input);
     return newClass;
+  }
+
+  textAndBorderColour(hexcode){
+    console.log(hexcode.toLowerCase() > '#464646');
+    if(RegExp('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$','i').test(hexcode)){
+      if (hexcode.toLowerCase() > '#464646' ){
+        return '#000000C0';
+      } else {
+        return '#FFFFFFC0';
+      }
+    } else {
+      return '#000000C0'
+    }
   }
 
   fetchAndDecode(url, type) {
@@ -170,13 +191,13 @@ class Input extends React.Component {
   }
 
   render(){
-    return <div id="input-box" className="box w-50">
+    return <div id="input-box" className="box w-50 box-dark">
         <h5 className="mb-4">
           Tell me your favourite colour:
         </h5>
         <div>
           <input id="input"></input>
-          <button className="button" onClick={() => this.props.onClick(this.useInput())}>Tell me!</button>
+          <button className="button" onClick={() => this.props.onClick(this.useInput(), this.textAndBorderColour(this.colourValue))}>Tell me!</button>
         </div>
         <div className="mt-2">
           {this.state.message}
