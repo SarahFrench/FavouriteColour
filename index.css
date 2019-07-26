@@ -19,61 +19,16 @@
   border: rgba(255, 255, 255, 0.8) solid 1px;
   background-color: rgba(255, 255, 255, 0.5); }
 
-.box {
-  border: #FFFFFFC0 solid 2px; }
+.box-light {
+  border: #FFFFFFC0 solid 2px;
+  color: #FFFFFFC0; }
+
+.box-dark {
+  border: #000000C0 solid 2px;
+  color: #000000C0; }
 
 .background {
   height: 100%;
   width: 100%; }
-
-.red {
-  background-color: #ff4343;
-  color: #FFFFFFC0; }
-
-.orange {
-  background-color: #ffa143;
-  color: #FFFFFFC0; }
-
-.yellow {
-  background-color: #FFCA4B;
-  color: #00000080; }
-  .yellow .box {
-    border: #00000080 solid 2px; }
-  .yellow .button {
-    border: #00000020 solid 1px;
-    background-color: #00000008; }
-
-.green {
-  background-color: #a1ff43;
-  color: #FFFFFF80; }
-
-.blue {
-  background-color: #43a1ff;
-  color: #FFFFFF80; }
-
-.purple {
-  background-color: #c06afd;
-  color: #FFFFFF80; }
-
-.pink {
-  background-color: #E983D8;
-  color: #FFFFFF80; }
-
-.black {
-  background-color: #000000;
-  color: #FFFFFF80; }
-
-.grey, .gray {
-  background-color: #808080;
-  color: #FFFFFF80; }
-
-.white {
-  background-color: #FFFFFF;
-  color: #00000080; }
-  .white .box {
-    border: #00000080 solid 2px; }
-  .white .button {
-    border: #00000020 solid 1px;
-    background-color: #00000008; }
 
 /*# sourceMappingURL=../public/index.css.map */
