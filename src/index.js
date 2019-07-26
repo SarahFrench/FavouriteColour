@@ -6,24 +6,25 @@ class Background extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      class: 'd-flex flex-row align-items-center justify-content-center background white',
+      class: 'd-flex flex-row align-items-center justify-content-center background',
       colours: require('./colours.js'),
       backgroundColour: '#FFFFFF',
-      textBorderColour: '#000000'
+      textColour: '#D3D3D3',
+      borderColour: '#D3D3D3',
     }
   }
 
-  changeBackground(colour, textBorderColour){
+  changeColourScheme(colour, textBorderColour){
     this.setState({
-      class: 'd-flex flex-row align-items-center justify-content-center background',
       backgroundColour: colour,
-      textBorderColour: textBorderColour
+      textColour: textBorderColour,
+      borderColour: textBorderColour
     })
   }
 
   render() {
     return <div className={this.state.class} style={{backgroundColor:this.state.backgroundColour,colour:this.state.textBorderColour}}>
-                < Input onClick={(colour) => this.changeBackground(colour)} colours={this.state.colours} />
+                < Input onClick={(colour, textBorderColour) => this.changeColourScheme(colour, textBorderColour)} colours={this.state.colours} borderColor={this.state.borderColour} />
            </div>
   }
 }
@@ -34,7 +35,7 @@ class Input extends React.Component {
     super(props);
     this.state = {
       colour: true,
-      colourValue: '',
+      colourValue: '#FF0000',
       gif: false,
       message: "C'mon, don't be shy",
     }
@@ -73,11 +74,11 @@ class Input extends React.Component {
   updateMessage(input, colour){
     if (input.length > 0 && colour){
       console.log(colour);
-      this.state.message = `This colour is called ${colour.name}`;
+      this.setState({message : `This colour is called ${colour.name}`})
     } else if (input.length > 0) {
-      this.state.message = `Yeah. I couldn't find a colour for that input. Here's a GIF for your trouble though.`
+      this.setState({message : `Yeah. I couldn't find a colour for that input. Here's a GIF for your trouble though.`})
     } else {
-      this.state.message = 'Watch the gif'
+      this.setState({message : 'Watch the gif'})
     }
   }
 
@@ -111,12 +112,14 @@ class Input extends React.Component {
   }
 
   textAndBorderColour(hexcode){
-    console.log(hexcode.toLowerCase() > '#464646');
-    if(RegExp('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$','i').test(hexcode)){
-      if (hexcode.toLowerCase() > '#464646' ){
-        return '#000000C0';
-      } else {
+    if(RegExp('#([A-Fa-f0-9]{3,})','i').test(hexcode)){
+      hexcode = hexcode.toLowerCase().slice(1,hexcode.length)
+      console.log(hexcode);
+      console.log(parseInt(hexcode, 16) < parseInt('464646', 16));
+      if (parseInt(hexcode, 16) < parseInt('464646', 16) ){
         return '#FFFFFFC0';
+      } else {
+        return '#000000C0';
       }
     } else {
       return '#000000C0'
@@ -191,13 +194,14 @@ class Input extends React.Component {
   }
 
   render(){
-    return <div id="input-box" className="box w-50 box-dark">
+    console.log(this.props.borderColor);
+    return <div id="input-box" className="box w-50" style={{borderColor:this.props.borderColor,borderStyle:'solid',borderWidth:'2px' }}>
         <h5 className="mb-4">
           Tell me your favourite colour:
         </h5>
         <div>
           <input id="input"></input>
-          <button className="button" onClick={() => this.props.onClick(this.useInput(), this.textAndBorderColour(this.colourValue))}>Tell me!</button>
+          <button className="button" onClick={() => this.props.onClick(this.useInput(), this.textAndBorderColour(this.state.colourValue))}>Tell me!</button>
         </div>
         <div className="mt-2">
           {this.state.message}
