@@ -15,6 +15,9 @@ class Background extends React.Component{
   }
 
   changeColourScheme(colour, textBorderColour){
+    console.log("Changing state in Background component with new background, border, text colours");
+    console.log('colour ' + colour);
+    console.log('textBorderColour ' + textBorderColour);
     this.setState({
       backgroundColour: colour,
       textColour: textBorderColour,
@@ -73,7 +76,6 @@ class Input extends React.Component {
 
   updateMessage(input, colour){
     if (input.length > 0 && colour){
-      console.log(colour);
       this.setState({message : `This colour is called ${colour.name}`})
     } else if (input.length > 0) {
       this.setState({message : `Yeah. I couldn't find a colour for that input. Here's a GIF for your trouble though.`})
@@ -114,11 +116,13 @@ class Input extends React.Component {
   textAndBorderColour(hexcode){
     if(RegExp('#([A-Fa-f0-9]{3,})','i').test(hexcode)){
       hexcode = hexcode.toLowerCase().slice(1,hexcode.length)
-      console.log(hexcode);
-      console.log(parseInt(hexcode, 16) < parseInt('464646', 16));
-      if (parseInt(hexcode, 16) < parseInt('464646', 16) ){
+      console.log("New colour from input: " + hexcode);
+      console.log("Is the number very dark? : " + (parseInt(hexcode, 16) < parseInt('800000', 16)));
+      if (parseInt(hexcode, 16) < parseInt('800000', 16) ){
+        console.log("Dark colour; use light colour for text: #FFFFFF");
         return '#FFFFFFC0';
       } else {
+        console.log("Light colour; use dark colour for text: #000000");
         return '#000000C0';
       }
     } else {
@@ -194,7 +198,8 @@ class Input extends React.Component {
   }
 
   render(){
-    console.log(this.props.borderColor);
+    console.log("rendering Input component");
+    console.log("this.props.borderColor = " + this.props.borderColor);
     return <div id="input-box" className="box w-50" style={{borderColor:this.props.borderColor,borderStyle:'solid',borderWidth:'2px' }}>
         <h5 className="mb-4">
           Tell me your favourite colour:
